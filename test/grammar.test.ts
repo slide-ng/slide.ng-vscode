@@ -75,12 +75,12 @@ test('tags: bindings, events, refs, structural directives, click directives', ()
   const star = lineOf('*ngIf');
   has(star, 'ngIf', 'keyword.control.structural-directive.slide-ng');
   has(star, 'visible', 'meta.embedded.expression.slide-ng');
-  has(star, 'v-click', 'entity.other.attribute-name.directive.slide-ng');
+  has(star, 'slide-ng-click', 'entity.other.attribute-name.directive.slide-ng');
   has(star, '+2', 'string.quoted.double.slide-ng');
   assert.ok(!tokens[star].some((t) => t.scopes.some((s) => s.startsWith('invalid'))), 'no token is marked invalid');
-  const range = lineOf('[v-click]');
-  has(range, '[v-click]', 'entity.other.attribute-name.binding.slide-ng');
-  has(range, 'v-after', 'entity.other.attribute-name.directive.slide-ng');
+  const range = lineOf('[slide-ng-click]');
+  has(range, '[slide-ng-click]', 'entity.other.attribute-name.binding.slide-ng');
+  has(range, 'slide-ng-after', 'entity.other.attribute-name.directive.slide-ng');
 });
 
 test('slot markers', () => {

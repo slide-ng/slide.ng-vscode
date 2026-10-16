@@ -194,8 +194,8 @@
           "patterns": [{ "include": "source.ts#expression" }]
         },
         {
-          "comment": "Click and motion directives with a text value: v-click=\"+2\", v-mark.red.circle=\"2\"",
-          "begin": "(?<=\\s)(v-(?:click-hide|click-gap|clicks|click|after|mark|motion|drag|switch)(?:\\.[\\w.-]+)?)\\s*(=)\\s*(\")",
+          "comment": "Click and motion directives with a text value: slide-ng-click=\"+2\", slide-ng-mark.red.circle=\"2\"",
+          "begin": "(?<=\\s)(slide-ng-(?:click-hide|click-gap|clicks|click|after|mark|motion|drag|switch)(?:\\.[\\w.-]+)?)\\s*(=)\\s*(\")",
           "beginCaptures": {
             "1": { "name": "entity.other.attribute-name.directive.slide-ng" },
             "2": { "name": "punctuation.separator.key-value.slide-ng" },
@@ -207,8 +207,8 @@
           "contentName": "string.quoted.double.slide-ng"
         },
         {
-          "comment": "The same without a value: v-click, v-after",
-          "match": "(?<=\\s)(v-(?:click-hide|click-gap|clicks|click|after|mark|motion|drag|switch)(?:\\.[\\w.-]+)?)(?!\\s*=)",
+          "comment": "The same without a value: slide-ng-click, slide-ng-after",
+          "match": "(?<=\\s)(slide-ng-(?:click-hide|click-gap|clicks|click|after|mark|motion|drag|switch)(?:\\.[\\w.-]+)?)(?!\\s*=)",
           "name": "entity.other.attribute-name.directive.slide-ng"
         }
       ]

@@ -9,7 +9,7 @@ Editor support for [slide.ng](https://github.com/slide-ng/slide.ng) decks (prese
 - **Syntax highlighting** for `slides.md` (language `slide-ng`, a markdown grammar with additions):
   - `---` slide separators and per-slide frontmatter as YAML
   - code fence options: `{monaco}`, `{monaco-diff}`, `{monaco-run}`, line ranges such as `{2,3|5|all}`, `[title.ts]`, `{lines:true}` objects, `magic-move`, and `<<< ./file.ts#region` snippet lines
-  - Angular in markdown: `@if` / `@else` / `@for` / `@switch` / `@defer` lines and `@let`, `{{ }}`, `[input]`, `(event)`, `#ref`, `*directive` attributes (the only `*` keyword style in the slide.ng syntax), and the `v-click` family
+  - Angular in markdown: `@if` / `@else` / `@for` / `@switch` / `@defer` lines and `@let`, `{{ }}`, `[input]`, `(event)`, `#ref`, `*directive` attributes (the only `*` keyword style in the slide.ng syntax), and the `slide-ng-click` family
   - `::slot::` lines, and `[click]` markers in speaker notes
 - **Slides outline** in the side bar: number, title, layout and estimated click count of every slide, read with `@slidev/parser` (the parser the slide.ng core uses). Click a slide to jump to it.
 - **Dev server**: start and stop `slide-ng dev` in an integrated terminal, with the port you set.
@@ -72,7 +72,7 @@ Export needs a Chromium; set `CHROME_PATH` as the slide.ng README describes.
 - **The language mode replaces Markdown for `slides.md`.** Features tied to the `markdown` language (the built-in Markdown preview button, Markdown link completion) are not active in a file in `slide-ng` mode. Switch the mode back, or use the slide.ng preview. For a deck file with another name, add `"files.associations": { "my-deck.md": "slide-ng" }`.
 - **Frontmatter and blank lines.** The grammar ends a frontmatter block at the closing `---` or at the first blank line. YAML with blank lines inside a block is highlighted only up to the blank line.
 - **Fence options** are only coloured on fences whose options contain `{`, `[`, `magic-move` or `twoslash`, for these languages: ts, tsx, js, jsx, html, css, scss, json, yaml, md, sh, py. Other languages get coloured options but plain code. Fences without options are left to the markdown grammar.
-- **The click count is an estimate** from the slide's text (`v-click`, `v-clicks`, `v-click-gap`, `{1|2|all}` ranges). The core counts while the slide runs, so computed values can differ. A `clicks:` number in the frontmatter is shown as exact.
+- **The click count is an estimate** from the slide's text (`slide-ng-click`, `slide-ng-clicks`, `slide-ng-click-gap`, `{1|2|all}` ranges). The core counts while the slide runs, so computed values can differ. A `clicks:` number in the frontmatter is shown as exact.
 - **`src:` imports are not followed.** The outline reads one file, so a slide with `src: ./pages/intro.md` shows as one row ("import ./pages/intro.md"). Moving and duplicating such a row moves the import line.
 - **Preview in remote windows** (SSH, containers, Codespaces) goes through VS Code's port forwarding. The slide.ng dev server only answers a `localhost` host name unless you start it with `--remote`, so a forwarded address may be refused. Not checked.
 - The server state comes from asking `http://localhost:<port>`, so a server started by hand is noticed too, but the Stop command only stops the one this window started.

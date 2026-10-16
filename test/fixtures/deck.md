@@ -22,9 +22,9 @@ class: text-red-500
 
 # Centered
 
-<div v-click>one</div>
-<div v-click>two</div>
-<div v-click="5">five</div>
+<div slide-ng-click>one</div>
+<div slide-ng-click>two</div>
+<div slide-ng-click="5">five</div>
 
 ---
 src: ./pages/intro.md

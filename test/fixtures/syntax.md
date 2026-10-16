@@ -28,9 +28,9 @@ Few.
 
 <app-counter #c [start]="5" (picked)="x = $event" />
 
-<div *ngIf="visible" v-click="+2">Reveal</div>
+<div *ngIf="visible" slide-ng-click="+2">Reveal</div>
 
-<div [v-click]="[2, 4]" v-after>Range</div>
+<div [slide-ng-click]="[2, 4]" slide-ng-after>Range</div>
 
 ::right::
 

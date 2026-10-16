@@ -14,34 +14,34 @@ import { statusText } from '../src/status-text.ts';
 
 const deck = readFileSync(new URL('./fixtures/deck.md', import.meta.url), 'utf8');
 
-test('clicks: v-click forms', () => {
-  assert.equal(estimateClicks('<div v-click>a</div>\n<div v-click>b</div>').count, 2);
-  assert.equal(estimateClicks('<div v-click="5">a</div>').count, 5);
-  assert.equal(estimateClicks('<div v-click>a</div>\n<div v-click="+2">b</div>').count, 3);
-  assert.equal(estimateClicks('<div [v-click]="[2, 4]">a</div>').count, 4);
-  assert.equal(estimateClicks('<div v-click>a</div>\n<div v-after>b</div>').count, 1);
-  assert.equal(estimateClicks('<div v-click="2" v-click-hide>a</div>').count, 2);
-  assert.equal(estimateClicks('<v-click-gap size="2" />\n<div v-click>a</div>').count, 3);
+test('clicks: slide-ng-click forms', () => {
+  assert.equal(estimateClicks('<div slide-ng-click>a</div>\n<div slide-ng-click>b</div>').count, 2);
+  assert.equal(estimateClicks('<div slide-ng-click="5">a</div>').count, 5);
+  assert.equal(estimateClicks('<div slide-ng-click>a</div>\n<div slide-ng-click="+2">b</div>').count, 3);
+  assert.equal(estimateClicks('<div [slide-ng-click]="[2, 4]">a</div>').count, 4);
+  assert.equal(estimateClicks('<div slide-ng-click>a</div>\n<div slide-ng-after>b</div>').count, 1);
+  assert.equal(estimateClicks('<div slide-ng-click="2" slide-ng-click-hide>a</div>').count, 2);
+  assert.equal(estimateClicks('<slide-ng-click-gap size="2" />\n<div slide-ng-click>a</div>').count, 3);
   assert.equal(estimateClicks('# No clicks\n\ntext').count, 0);
 });
 
-test('clicks: <v-clicks> lists', () => {
-  const list = '<v-clicks>\n\n- a\n- b\n  - nested\n- c\n\n</v-clicks>';
+test('clicks: <slide-ng-clicks> lists', () => {
+  const list = '<slide-ng-clicks>\n\n- a\n- b\n  - nested\n- c\n\n</slide-ng-clicks>';
   assert.equal(estimateClicks(list).count, 3);
-  assert.equal(estimateClicks(list.replace('<v-clicks>', '<v-clicks depth="2">')).count, 4);
-  assert.equal(estimateClicks(list.replace('<v-clicks>', '<v-clicks every="2">')).count, 2);
+  assert.equal(estimateClicks(list.replace('<slide-ng-clicks>', '<slide-ng-clicks depth="2">')).count, 4);
+  assert.equal(estimateClicks(list.replace('<slide-ng-clicks>', '<slide-ng-clicks every="2">')).count, 2);
 });
 
 test('clicks: code ranges count, code text does not', () => {
   assert.equal(estimateClicks('```ts {1|3-4|all}\nconst a = 1;\n```').count, 2);
-  assert.equal(estimateClicks('```html\n<div v-click>not markup</div>\n```').count, 0);
+  assert.equal(estimateClicks('```html\n<div slide-ng-click>not markup</div>\n```').count, 0);
   assert.equal(estimateClicks('```ts {lines:true}\nx\n```').count, 0);
-  assert.equal(estimateClicks('```ts {1|2}\nx\n```\n\n<div v-click>a</div>').count, 2);
+  assert.equal(estimateClicks('```ts {1|2}\nx\n```\n\n<div slide-ng-click>a</div>').count, 2);
 });
 
 test('clicks: frontmatter clicks wins and is exact', () => {
-  assert.deepEqual(estimateClicks('<div v-click>a</div>', { clicks: 7 }), { count: 7, fixed: true });
-  assert.deepEqual(estimateClicks('<div v-click>a</div>', { clicks: 'x' }), { count: 1, fixed: false });
+  assert.deepEqual(estimateClicks('<div slide-ng-click>a</div>', { clicks: 7 }), { count: 7, fixed: true });
+  assert.deepEqual(estimateClicks('<div slide-ng-click>a</div>', { clicks: 'x' }), { count: 1, fixed: false });
 });
 
 test('outline of the fixture deck', async () => {

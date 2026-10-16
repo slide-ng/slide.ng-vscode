@@ -1,8 +1,8 @@
 // An estimate of how many clicks a slide takes, from its text alone. The core works this out in the browser while the
-// slide runs (every `v-click` registers itself), so this can differ for computed values; the outline marks it as an estimate.
+// slide runs (every `slide-ng-click` registers itself), so this can differ for computed values; the outline marks it as an estimate.
 //
-// Counted: `v-click` (bare, "3", "+2" and the `[v-click]="[2, 4]"` range), `<v-clicks>` lists, `<v-click-gap size>`, and
-// every `|` in a code fence's `{1|3|all}` range. `v-after` adds nothing. A `clicks:` number in the frontmatter wins.
+// Counted: `slide-ng-click` (bare, "3", "+2" and the `[slide-ng-click]="[2, 4]"` range), `<slide-ng-clicks>` lists, `<slide-ng-click-gap size>`, and
+// every `|` in a code fence's `{1|3|all}` range. `slide-ng-after` adds nothing. A `clicks:` number in the frontmatter wins.
 
 export interface ClickCount {
   count: number;
@@ -43,9 +43,9 @@ export function estimateClicks(content: string, frontmatter: Record<string, unkn
 }
 
 function clicksInTags(text: string, step: (n: number) => void, jump: (to: number) => void): void {
-  // <v-clicks> ... </v-clicks>: one click per list item (or per `every` items).
+  // <slide-ng-clicks> ... </slide-ng-clicks>: one click per list item (or per `every` items).
   const withoutLists = text.replace(
-    /<v-clicks\b([^>]*)>([\s\S]*?)<\/v-clicks>/g,
+    /<slide-ng-clicks\b([^>]*)>([\s\S]*?)<\/slide-ng-clicks>/g,
     (_all, attrs: string, body: string) => {
       const every = Math.max(1, Number(attr(attrs, 'every')) || 1);
       const depth = Math.max(1, Number(attr(attrs, 'depth')) || 1);
@@ -60,21 +60,21 @@ function clicksInTags(text: string, step: (n: number) => void, jump: (to: number
   );
 
   for (const [, name, attrs] of withoutLists.matchAll(TAG)) {
-    if (name === 'v-click-gap') {
+    if (name === 'slide-ng-click-gap') {
       step(Number(attr(attrs, 'size')) || 1);
       continue;
     }
     const values = attributes(attrs);
-    const click = values.get('v-click');
-    const bound = values.get('[v-click]');
+    const click = values.get('slide-ng-click');
+    const bound = values.get('[slide-ng-click]');
     if (bound !== undefined) {
       const numbers = [...bound.matchAll(/\d+/g)].map((m) => Number(m[0]));
       if (numbers.length) jump(Math.max(...numbers));
     } else if (click !== undefined) {
       if (/^\+\d+$/.test(click.trim())) step(Number(click.trim().slice(1)));
       else if (/^\d+$/.test(click.trim())) jump(Number(click.trim()));
-      else step(1); // bare `v-click`
-    } else if (values.has('v-click-hide')) {
+      else step(1); // bare `slide-ng-click`
+    } else if (values.has('slide-ng-click-hide')) {
       step(1);
     }
   }
