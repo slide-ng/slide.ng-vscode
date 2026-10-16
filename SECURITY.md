@@ -12,6 +12,8 @@ Use GitHub's private vulnerability reporting: open the **Security** tab of this 
 (<https://github.com/slide-ng/slide.ng-vscode/security/advisories/new>).
 Describe what you found, how to reproduce it and which version you used. This is a small project kept up in spare time, so there is no fixed response time. Expect an answer within a few days.
 
+If you cannot use GitHub, email erkamyaman35@gmail.com with "Security" in the subject.
+
 ## What the extension does that matters for security
 
 - It does not bundle `slide-ng`. It runs the project's own `slide-ng` in an integrated terminal, only after the workspace is trusted.
