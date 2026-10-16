@@ -1,0 +1,222 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "slide.ng Markdown",
+  "scopeName": "text.html.markdown.slide-ng",
+  "comment": "Markdown plus the slide.ng additions. The base grammar is VS Code's own markdown; everything below is injected on top of it.",
+  "patterns": [{ "include": "text.html.markdown" }],
+  "injections": {
+    "L:text.html.markdown.slide-ng -markup.fenced_code -markup.inline.raw -meta.embedded -comment -meta.tag": {
+      "patterns": [
+        { "include": "#separator-or-frontmatter" },
+        { "include": "#slot" },
+        { "include": "#snippet" },
+        { "include": "#let" },
+        { "include": "#control-flow" },
+        { "include": "#block-end" },
+        { "include": "#interpolation" }
+      ]
+    },
+    "L:meta.tag -string -meta.embedded": {
+      "patterns": [{ "include": "#tag-attributes" }]
+    },
+    "L:comment.block.html": {
+      "patterns": [{ "include": "#click-marker" }]
+    }
+  },
+  "repository": {
+    "separator-or-frontmatter": {
+      "comment": "A line of --- . When the next lines are YAML up to a closing --- it is a per-slide frontmatter block. A blank line right after it, or in the YAML, ends the block (the same simplification the Slidev grammar makes).",
+      "begin": "^(---)[ \\t]*$",
+      "beginCaptures": { "1": { "name": "punctuation.definition.separator.slide-ng" } },
+      "end": "(?=^[ \\t]*$)|^(---)[ \\t]*$",
+      "endCaptures": { "1": { "name": "punctuation.definition.separator.slide-ng" } },
+      "name": "meta.slide-start.slide-ng",
+      "contentName": "meta.embedded.block.frontmatter",
+      "patterns": [{ "include": "source.yaml" }]
+    },
+    "slot": {
+      "comment": "::right:: on a line of its own starts a named part of the slide.",
+      "match": "^(::)([A-Za-z][\\w-]*)(::)[ \\t]*$",
+      "name": "meta.slot.slide-ng",
+      "captures": {
+        "1": { "name": "punctuation.definition.slot.slide-ng" },
+        "2": { "name": "entity.name.slot.slide-ng" },
+        "3": { "name": "punctuation.definition.slot.slide-ng" }
+      }
+    },
+    "snippet": {
+      "comment": "<<< ./file.ts#region ts {1|2} {lines:true}",
+      "begin": "^(<<<)[ \\t]*(\\S+)?",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.snippet.slide-ng" },
+        "2": { "name": "string.unquoted.path.snippet.slide-ng" }
+      },
+      "end": "$",
+      "name": "meta.snippet.slide-ng",
+      "patterns": [{ "include": "#code-options" }]
+    },
+    "code-options": {
+      "patterns": [
+        { "match": "\\[[^\\]\\n]*\\]", "name": "string.other.code-title.slide-ng" },
+        {
+          "match": "(\\{)\\s*(monaco(?:-diff|-run|-write)?)\\s*(\\})",
+          "name": "meta.code-options.slide-ng",
+          "captures": {
+            "1": { "name": "punctuation.section.braces.begin.slide-ng" },
+            "2": { "name": "keyword.other.monaco.slide-ng" },
+            "3": { "name": "punctuation.section.braces.end.slide-ng" }
+          }
+        },
+        {
+          "match": "(\\{)([^}:\\n]*)(\\})",
+          "name": "meta.code-options.slide-ng",
+          "captures": {
+            "1": { "name": "punctuation.section.braces.begin.slide-ng" },
+            "2": { "patterns": [{ "include": "#line-ranges" }] },
+            "3": { "name": "punctuation.section.braces.end.slide-ng" }
+          }
+        },
+        {
+          "begin": "(?=\\{[^}\\n]*:)",
+          "end": "(?<=\\})",
+          "name": "meta.code-options.slide-ng",
+          "contentName": "meta.embedded.block.code-options.slide-ng",
+          "patterns": [{ "include": "source.ts#object-literal" }]
+        },
+        { "match": "\\b(magic-move|twoslash)\\b", "name": "keyword.other.code-flag.slide-ng" }
+      ]
+    },
+    "line-ranges": {
+      "comment": "2,3|5-7|all : one range list per click, separated by |",
+      "patterns": [
+        { "match": "\\|", "name": "punctuation.separator.click-step.slide-ng" },
+        { "match": ",", "name": "punctuation.separator.comma.slide-ng" },
+        { "match": "\\d+(?:\\s*-\\s*\\d+)?", "name": "constant.numeric.line-range.slide-ng" },
+        { "match": "\\b(?:all|hide|none)\\b|\\*", "name": "constant.language.line-range.slide-ng" }
+      ]
+    },
+    "let": {
+      "match": "^\\s*(@let)\\s+([A-Za-z_$][\\w$]*)\\s*(=)\\s*(.*?)\\s*(;)?\\s*$",
+      "name": "meta.control.let.slide-ng",
+      "captures": {
+        "1": { "name": "keyword.control.at-rule.slide-ng" },
+        "2": { "name": "variable.other.readwrite.slide-ng" },
+        "3": { "name": "keyword.operator.assignment.slide-ng" },
+        "4": { "patterns": [{ "include": "source.ts#expression" }] },
+        "5": { "name": "punctuation.terminator.statement.slide-ng" }
+      }
+    },
+    "control-flow": {
+      "comment": "@if (x) {   } @else if (y) {   @for (a of b; track a) {   @switch (v) {   @defer {   ... on their own line",
+      "match": "^\\s*(?:(\\})\\s*)?(@(?:if|else\\s+if|else|for|switch|case|default|empty|defer|placeholder|loading|error))\\b\\s*(?:(\\()(.*)(\\)))?\\s*(\\{)?\\s*$",
+      "name": "meta.control.flow.slide-ng",
+      "captures": {
+        "1": { "name": "punctuation.definition.block.end.slide-ng" },
+        "2": { "name": "keyword.control.flow.slide-ng" },
+        "3": { "name": "punctuation.section.parens.begin.slide-ng" },
+        "4": { "patterns": [{ "include": "source.ts#expression" }] },
+        "5": { "name": "punctuation.section.parens.end.slide-ng" },
+        "6": { "name": "punctuation.definition.block.begin.slide-ng" }
+      }
+    },
+    "block-end": {
+      "match": "^\\s*(\\})\\s*$",
+      "captures": { "1": { "name": "punctuation.definition.block.end.slide-ng" } }
+    },
+    "interpolation": {
+      "begin": "\\{\\{",
+      "beginCaptures": { "0": { "name": "punctuation.definition.interpolation.begin.slide-ng" } },
+      "end": "\\}\\}",
+      "endCaptures": { "0": { "name": "punctuation.definition.interpolation.end.slide-ng" } },
+      "name": "meta.interpolation.slide-ng",
+      "contentName": "meta.embedded.expression.slide-ng",
+      "patterns": [{ "include": "source.ts#expression" }]
+    },
+    "tag-attributes": {
+      "patterns": [
+        {
+          "comment": "Structural directive with a value: *ngIf=\"visible\"",
+          "begin": "(?<=\\s)(\\*)([A-Za-z][\\w-]*)\\s*(=)\\s*(\")",
+          "beginCaptures": {
+            "1": { "name": "punctuation.definition.structural.slide-ng" },
+            "2": { "name": "keyword.control.structural-directive.slide-ng" },
+            "3": { "name": "punctuation.separator.key-value.slide-ng" },
+            "4": { "name": "punctuation.definition.string.begin.slide-ng" }
+          },
+          "end": "\"",
+          "endCaptures": { "0": { "name": "punctuation.definition.string.end.slide-ng" } },
+          "name": "meta.attribute.structural.slide-ng",
+          "contentName": "meta.embedded.expression.slide-ng",
+          "patterns": [{ "include": "source.ts#expression" }]
+        },
+        {
+          "comment": "Structural directive without a value: *appThing",
+          "match": "(?<=\\s)(\\*)([A-Za-z][\\w-]*)(?!\\s*=)",
+          "name": "meta.attribute.structural.slide-ng",
+          "captures": {
+            "1": { "name": "punctuation.definition.structural.slide-ng" },
+            "2": { "name": "keyword.control.structural-directive.slide-ng" }
+          }
+        },
+        {
+          "comment": "Template reference: #counter",
+          "match": "(?<=\\s)(#)([\\w-]+)",
+          "captures": {
+            "1": { "name": "punctuation.definition.reference.slide-ng" },
+            "2": { "name": "variable.other.template-reference.slide-ng" }
+          }
+        },
+        {
+          "comment": "[input]=\"expr\", [(both)]=\"expr\", (event)=\"expr\"",
+          "begin": "(?<=\\s)(\\[\\(?[\\w.:@-]+\\)?\\]|\\([\\w.:@-]+\\))\\s*(=)\\s*(\")",
+          "beginCaptures": {
+            "1": { "name": "entity.other.attribute-name.binding.slide-ng" },
+            "2": { "name": "punctuation.separator.key-value.slide-ng" },
+            "3": { "name": "punctuation.definition.string.begin.slide-ng" }
+          },
+          "end": "\"",
+          "endCaptures": { "0": { "name": "punctuation.definition.string.end.slide-ng" } },
+          "name": "meta.attribute.binding.slide-ng",
+          "contentName": "meta.embedded.expression.slide-ng",
+          "patterns": [{ "include": "source.ts#expression" }]
+        },
+        {
+          "begin": "(?<=\\s)(\\[\\(?[\\w.:@-]+\\)?\\]|\\([\\w.:@-]+\\))\\s*(=)\\s*(')",
+          "beginCaptures": {
+            "1": { "name": "entity.other.attribute-name.binding.slide-ng" },
+            "2": { "name": "punctuation.separator.key-value.slide-ng" },
+            "3": { "name": "punctuation.definition.string.begin.slide-ng" }
+          },
+          "end": "'",
+          "endCaptures": { "0": { "name": "punctuation.definition.string.end.slide-ng" } },
+          "name": "meta.attribute.binding.slide-ng",
+          "contentName": "meta.embedded.expression.slide-ng",
+          "patterns": [{ "include": "source.ts#expression" }]
+        },
+        {
+          "comment": "Click and motion directives with a text value: v-click=\"+2\", v-mark.red.circle=\"2\"",
+          "begin": "(?<=\\s)(v-(?:click-hide|click-gap|clicks|click|after|mark|motion|drag|switch)(?:\\.[\\w.-]+)?)\\s*(=)\\s*(\")",
+          "beginCaptures": {
+            "1": { "name": "entity.other.attribute-name.directive.slide-ng" },
+            "2": { "name": "punctuation.separator.key-value.slide-ng" },
+            "3": { "name": "punctuation.definition.string.begin.slide-ng" }
+          },
+          "end": "\"",
+          "endCaptures": { "0": { "name": "punctuation.definition.string.end.slide-ng" } },
+          "name": "meta.attribute.directive.slide-ng",
+          "contentName": "string.quoted.double.slide-ng"
+        },
+        {
+          "comment": "The same without a value: v-click, v-after",
+          "match": "(?<=\\s)(v-(?:click-hide|click-gap|clicks|click|after|mark|motion|drag|switch)(?:\\.[\\w.-]+)?)(?!\\s*=)",
+          "name": "entity.other.attribute-name.directive.slide-ng"
+        }
+      ]
+    },
+    "click-marker": {
+      "comment": "[click] and [click:3] in speaker notes",
+      "match": "\\[click(?::\\d+)?\\]",
+      "name": "keyword.other.click-marker.slide-ng"
+    }
+  }
+}
