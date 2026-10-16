@@ -10,9 +10,339 @@
     "type": "git",
     "url": "https://github.com/slide-ng/slide.ng-vscode"
   },
+  "homepage": "https://github.com/slide-ng/slide.ng-vscode#readme",
+  "bugs": {
+    "url": "https://github.com/slide-ng/slide.ng-vscode/issues"
+  },
+  "categories": [
+    "Programming Languages",
+    "Visualization",
+    "Other"
+  ],
+  "keywords": [
+    "slide.ng",
+    "slides",
+    "presentation",
+    "markdown",
+    "angular"
+  ],
   "engines": {
     "vscode": "^1.85.0",
     "node": ">=22.12.0"
+  },
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "Starting the dev server and exporting run the project's own slide-ng command, so they are off until the workspace is trusted. Highlighting and the outline work without trust.",
+      "restrictedConfigurations": [
+        "slide-ng.cli.command",
+        "slide-ng.dev.port"
+      ]
+    }
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "slide-ng",
+        "aliases": [
+          "slide.ng Markdown",
+          "slide-ng"
+        ],
+        "filenames": [
+          "slides.md"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "slide-ng",
+        "scopeName": "text.html.markdown.slide-ng",
+        "path": "./syntaxes/slide-ng.tmLanguage.json",
+        "embeddedLanguages": {
+          "meta.embedded.block.frontmatter": "yaml",
+          "meta.embedded.expression.slide-ng": "typescript",
+          "meta.embedded.block.code-options.slide-ng": "typescript",
+          "meta.embedded.block.typescript": "typescript",
+          "meta.embedded.block.javascript": "javascript",
+          "meta.embedded.block.html": "html",
+          "meta.embedded.block.css": "css",
+          "meta.embedded.block.json": "json",
+          "meta.embedded.block.yaml": "yaml",
+          "meta.embedded.block.shellscript": "shellscript",
+          "meta.embedded.block.python": "python",
+          "meta.embedded.block.markdown": "markdown"
+        }
+      },
+      {
+        "scopeName": "slide-ng.fences",
+        "path": "./syntaxes/slide-ng-fences.tmLanguage.json",
+        "injectTo": [
+          "text.html.markdown.slide-ng"
+        ],
+        "embeddedLanguages": {
+          "meta.embedded.block.typescript": "typescript",
+          "meta.embedded.block.typescriptreact": "typescriptreact",
+          "meta.embedded.block.javascript": "javascript",
+          "meta.embedded.block.javascriptreact": "javascriptreact",
+          "meta.embedded.block.html": "html",
+          "meta.embedded.block.css": "css",
+          "meta.embedded.block.scss": "scss",
+          "meta.embedded.block.json": "json",
+          "meta.embedded.block.yaml": "yaml",
+          "meta.embedded.block.shellscript": "shellscript",
+          "meta.embedded.block.python": "python",
+          "meta.embedded.block.markdown": "markdown"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "command": "slide-ng.startServer",
+        "title": "Start Dev Server",
+        "category": "Slide",
+        "icon": "$(play)"
+      },
+      {
+        "command": "slide-ng.stopServer",
+        "title": "Stop Dev Server",
+        "category": "Slide",
+        "icon": "$(debug-stop)"
+      },
+      {
+        "command": "slide-ng.openPreview",
+        "title": "Open Preview",
+        "category": "Slide",
+        "icon": "$(open-preview)"
+      },
+      {
+        "command": "slide-ng.openInBrowser",
+        "title": "Open Preview in Browser",
+        "category": "Slide",
+        "icon": "$(link-external)"
+      },
+      {
+        "command": "slide-ng.goToSlide",
+        "title": "Go to Slide...",
+        "category": "Slide"
+      },
+      {
+        "command": "slide-ng.moveSlideUp",
+        "title": "Move Slide Up",
+        "category": "Slide",
+        "icon": "$(arrow-up)"
+      },
+      {
+        "command": "slide-ng.moveSlideDown",
+        "title": "Move Slide Down",
+        "category": "Slide",
+        "icon": "$(arrow-down)"
+      },
+      {
+        "command": "slide-ng.newSlideBelow",
+        "title": "New Slide Below",
+        "category": "Slide",
+        "icon": "$(add)"
+      },
+      {
+        "command": "slide-ng.duplicateSlide",
+        "title": "Duplicate Slide",
+        "category": "Slide",
+        "icon": "$(copy)"
+      },
+      {
+        "command": "slide-ng.export",
+        "title": "Export",
+        "category": "Slide",
+        "icon": "$(export)"
+      },
+      {
+        "command": "slide-ng.statusAction",
+        "title": "Status Bar Action",
+        "category": "Slide"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "slide-ng.statusAction",
+          "when": "false"
+        },
+        {
+          "command": "slide-ng.startServer",
+          "when": "slide-ng.isDeck"
+        },
+        {
+          "command": "slide-ng.stopServer",
+          "when": "slide-ng.isDeck"
+        },
+        {
+          "command": "slide-ng.openPreview",
+          "when": "slide-ng.isDeck"
+        },
+        {
+          "command": "slide-ng.openInBrowser",
+          "when": "slide-ng.isDeck"
+        },
+        {
+          "command": "slide-ng.goToSlide",
+          "when": "slide-ng.isDeck"
+        },
+        {
+          "command": "slide-ng.moveSlideUp",
+          "when": "slide-ng.isDeck"
+        },
+        {
+          "command": "slide-ng.moveSlideDown",
+          "when": "slide-ng.isDeck"
+        },
+        {
+          "command": "slide-ng.newSlideBelow",
+          "when": "slide-ng.isDeck"
+        },
+        {
+          "command": "slide-ng.duplicateSlide",
+          "when": "slide-ng.isDeck"
+        },
+        {
+          "command": "slide-ng.export",
+          "when": "slide-ng.isDeck"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "slide-ng.startServer",
+          "when": "view == slide-ng.slides",
+          "group": "navigation@1"
+        },
+        {
+          "command": "slide-ng.stopServer",
+          "when": "view == slide-ng.slides",
+          "group": "navigation@2"
+        },
+        {
+          "command": "slide-ng.openPreview",
+          "when": "view == slide-ng.slides",
+          "group": "navigation@3"
+        },
+        {
+          "command": "slide-ng.newSlideBelow",
+          "when": "view == slide-ng.slides",
+          "group": "navigation@4"
+        },
+        {
+          "command": "slide-ng.export",
+          "when": "view == slide-ng.slides",
+          "group": "1_export"
+        },
+        {
+          "command": "slide-ng.openInBrowser",
+          "when": "view == slide-ng.slides",
+          "group": "1_export"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "slide-ng.moveSlideUp",
+          "when": "view == slide-ng.slides && viewItem == slide",
+          "group": "inline@1"
+        },
+        {
+          "command": "slide-ng.moveSlideDown",
+          "when": "view == slide-ng.slides && viewItem == slide",
+          "group": "inline@2"
+        },
+        {
+          "command": "slide-ng.duplicateSlide",
+          "when": "view == slide-ng.slides && viewItem == slide",
+          "group": "1_edit@1"
+        },
+        {
+          "command": "slide-ng.newSlideBelow",
+          "when": "view == slide-ng.slides && viewItem == slide",
+          "group": "1_edit@2"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "slide-ng",
+          "title": "slide.ng",
+          "icon": "res/slides.svg",
+          "when": "slide-ng.isDeck"
+        }
+      ]
+    },
+    "views": {
+      "slide-ng": [
+        {
+          "id": "slide-ng.slides",
+          "name": "Slides",
+          "when": "slide-ng.isDeck"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "slide.ng",
+      "properties": {
+        "slide-ng.entry": {
+          "type": "string",
+          "default": "",
+          "scope": "resource",
+          "markdownDescription": "The deck file, relative to the workspace folder. Empty means `slides.md`. It must be a `.md` file inside the folder. Add `\"files.associations\": { \"my-deck.md\": \"slide-ng\" }` to get slide.ng highlighting for a file with another name."
+        },
+        "slide-ng.cli.command": {
+          "type": "string",
+          "default": "npx --no-install slide-ng",
+          "scope": "machine",
+          "markdownDescription": "The command that runs the project's own `slide-ng`, run in the deck folder. The extension adds `dev` or `export`, the deck path and flags. Use `npx --no-install slide-ng` for npm, pnpm and yarn projects, or `node node_modules/slide-ng/bin/slide-ng.mjs`. Only a user setting: a workspace cannot change it."
+        },
+        "slide-ng.dev.port": {
+          "type": "number",
+          "default": 4230,
+          "minimum": 1,
+          "maximum": 65535,
+          "scope": "window",
+          "description": "Port of the dev server (passed as `--port`). The status bar and preview look for the server on this port."
+        },
+        "slide-ng.preview.followCursor": {
+          "type": "boolean",
+          "default": true,
+          "description": "Move an open preview to the slide the cursor is on."
+        },
+        "slide-ng.preview.openOnStart": {
+          "type": "boolean",
+          "default": true,
+          "description": "Open the preview panel when the dev server is started with the Start Dev Server command."
+        },
+        "slide-ng.outline.showClicks": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the estimated click count of each slide in the outline."
+        },
+        "slide-ng.export.format": {
+          "type": "string",
+          "enum": [
+            "pdf",
+            "png",
+            "pptx",
+            "md"
+          ],
+          "default": "pdf",
+          "description": "The format preselected by the Export command."
+        },
+        "slide-ng.export.withClicks": {
+          "type": "boolean",
+          "default": false,
+          "description": "Export one page per click (`--with-clicks`)."
+        }
+      }
+    }
   },
   "scripts": {
     "build": "node esbuild.mjs",
@@ -21,7 +351,7 @@
     "test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test test/*.test.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "package": "npm run build && vsce package --no-dependencies --out slide.ng-vscode.vsix"
+    "package": "npm run build -- --minify && vsce package --no-dependencies --out slide.ng-vscode.vsix"
   },
   "devDependencies": {
     "@slidev/parser": "^53.0.0",
