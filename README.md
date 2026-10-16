@@ -1,3 +1,8 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="res/readme-banner-dark.png">
+  <img alt="slide.ng" src="res/readme-banner-light.png" width="800">
+</picture>
+
 # slide.ng for VS Code
 
 Editor support for [slide.ng](https://github.com/slide-ng/slide.ng) decks (presentations written in `slides.md`, with Angular template syntax inside).
