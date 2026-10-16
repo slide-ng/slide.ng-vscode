@@ -1,0 +1,29 @@
+#!/bin/sh
+# Formats the staged files with Prettier and stages the result.
+# A file that also has unstaged changes is skipped, so a partial `git add -p` stays partial.
+root="$(git rev-parse --show-toplevel)" || exit 0
+cd "$root" || exit 0
+[ -x node_modules/.bin/prettier ] || exit 0
+
+list="$(mktemp)" || exit 0
+trap 'rm -f "$list"' EXIT
+
+unstaged="$(git -c core.quotePath=false diff --name-only)"
+
+git -c core.quotePath=false diff --cached --name-only --diff-filter=ACMR |
+  grep -E '\.(ts|mjs|js|json|css|html|md|yml|yaml)$' |
+  while IFS= read -r file; do
+    if printf '%s\n' "$unstaged" | grep -qxF -- "$file"; then
+      echo "pre-commit: skipping $file, it has unstaged changes. Run npm run format before you push." >&2
+    else
+      printf '%s\n' "$file"
+    fi
+  done >"$list"
+
+[ -s "$list" ] || exit 0
+
+# Prettier skips ignored files by itself (see .prettierignore).
+tr '\n' '\0' <"$list" | xargs -0 node_modules/.bin/prettier --write --ignore-unknown >/dev/null 2>&1 ||
+  echo "pre-commit: Prettier failed on the staged files." >&2
+tr '\n' '\0' <"$list" | xargs -0 git --literal-pathspecs add --
+exit 0

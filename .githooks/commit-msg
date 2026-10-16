@@ -1,0 +1,6 @@
+#!/bin/sh
+# Warns when the commit message does not follow CONTRIBUTING.md.
+# It never blocks the commit.
+root="$(git rev-parse --show-toplevel)" || exit 0
+node "$root/scripts/commit-message.mjs" --file "$1" --warn || true
+exit 0
