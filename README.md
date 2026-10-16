@@ -153,3 +153,9 @@ The slide.ng extension is free and open source. If it helps your work, please co
 ## License
 
 MIT, see [LICENSE](LICENSE). The ideas for the grammar and the outline came from looking at other editor extensions for presentation tools; no code was copied.
+
+## Credits and disclaimer
+
+The extension reads decks with [`@slidev/parser`](https://github.com/slidevjs/slidev) (MIT, Anthony Fu and Slidev contributors); see [NOTICE](NOTICE) and [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for the licence texts of everything bundled.
+
+slide.ng is an independent open-source project. It is not affiliated with or endorsed by the Angular team or Google, or by Slidev. Angular is a trademark of Google LLC. Slidev is a project of its own maintainers; the names are used here only to describe what slide.ng works with. This is a plain notice, not legal advice.
