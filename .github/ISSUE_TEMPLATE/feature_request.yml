@@ -1,0 +1,37 @@
+name: Feature request
+description: Suggest something new for the extension
+labels: [feature, needs triage]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What can you not do today, or what is hard when you write or present a deck?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you would like
+      description: How it could work, for example a command, a setting, or a view.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Other ways you tried
+  - type: input
+    id: vscode-version
+    attributes:
+      label: VS Code version and operating system
+      placeholder: 1.95.0, Windows 11
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before you submit
+      options:
+        - label: I searched the existing issues.
+          required: true
+        - label: This is about the extension. Changes to slide.ng itself belong in the slide.ng repository.
+          required: true
+        - label: I might be able to help build it.
