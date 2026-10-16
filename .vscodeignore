@@ -1,4 +1,4 @@
-# Only dist/, syntaxes/, res/, language-configuration.json, README, CHANGELOG, LICENSE and package.json go into the .vsix.
+# Only dist/, syntaxes/, res/, language-configuration.json, README, CHANGELOG, LICENSE, THIRD-PARTY-NOTICES.md and package.json go into the .vsix.
 **
 !dist/extension.js
 !syntaxes/*.json
@@ -8,3 +8,4 @@
 !README.md
 !CHANGELOG.md
 !LICENSE
+!THIRD-PARTY-NOTICES.md
