@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run typecheck
+      - run: npm test
+      - name: Package the extension (nothing is published)
+        run: npm run package
+      - uses: actions/upload-artifact@v4
+        with:
+          name: slide.ng-vscode-vsix
+          path: slide.ng-vscode.vsix
+          if-no-files-found: error
