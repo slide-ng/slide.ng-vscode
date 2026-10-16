@@ -55,7 +55,9 @@ test('slide 1 cannot move and nothing goes before it', async () => {
   const slides = await parseSlides(deck, FILE);
   assert.throws(() => moveSlide(deck, slides, 1, 2), EditError);
   assert.throws(() => moveSlide(deck, slides, 2, 1), /headmatter/);
+  assert.throws(() => moveSlide(deck, slides, 0, 1), /headmatter|no slide 0/);
   assert.throws(() => moveSlide(deck, slides, 9, 2), /no slide 9/);
+  assert.throws(() => moveSlide(deck, slides, 7, 8), /already the last/);
 });
 
 test('duplicate a slide with and without frontmatter', async () => {

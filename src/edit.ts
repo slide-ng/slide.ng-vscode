@@ -71,8 +71,9 @@ export function slideAtLine(slides: Range[], line: number): number {
 /** Slide `from` becomes slide `to`. */
 export function moveSlide(text: string, slides: Range[], from: number, to: number): Edited {
   check(from, slides.length, 'Move');
-  check(to, slides.length, 'Move');
   if (from === 1 || to === 1) throw new EditError(FIRST);
+  if (to > slides.length) throw new EditError('This is already the last slide.');
+  check(to, slides.length, 'Move');
   return edit(text, (lines) => {
     const parts = blocks(lines, slides).map((b) => lines.slice(b.from, b.to));
     const [moved] = parts.splice(from - 1, 1);
