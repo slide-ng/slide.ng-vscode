@@ -91,7 +91,24 @@ Checked, by 44 automated tests (`npm test`: 13 grammar, 10 slide edits, 12 helpe
 
 ## Development
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Security reports: [SECURITY.md](SECURITY.md). The repository URL in `package.json` (`https://github.com/slide-ng/slide.ng-vscode`) and the publisher name (`slide-ng`) are placeholders.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how to set up, run the tests and add a command, a setting or a grammar rule.
+
+## Related repositories
+
+- [slide.ng](https://github.com/slide-ng/slide.ng): the presentation tool itself.
+- [slide.ng-themes](https://github.com/slide-ng/slide.ng-themes): the official themes.
+- [slide.ng-starter](https://github.com/slide-ng/slide.ng-starter): a starter deck to copy.
+- [slide.ng-docs](https://github.com/slide-ng/slide.ng-docs): the documentation site.
+- [slide.ng-docker](https://github.com/slide-ng/slide.ng-docker): a container image for building and serving decks.
+- [slide.ng-vscode](https://github.com/slide-ng/slide.ng-vscode): this extension.
+
+These addresses are placeholders until the repositories are published.
+
+## Contributing
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md). Changes follow the [Code of Conduct](CODE_OF_CONDUCT.md); security reports go through [SECURITY.md](SECURITY.md). Changes are listed in [CHANGELOG.md](CHANGELOG.md).
+
+The repository URL in `package.json` (`https://github.com/slide-ng/slide.ng-vscode`) and the publisher name (`slide-ng`) are placeholders.
 
 ## License
 
