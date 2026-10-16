@@ -16,7 +16,10 @@ const lineOf = (text: string, nth = 0) => {
 
 let tokens: Token[][];
 const has = (line: number, needle: string, scope: string) =>
-  assert.ok(scopesOf(tokens, line, needle).includes(scope), `"${needle}" should have ${scope}, has ${scopesOf(tokens, line, needle).join(' ')}`);
+  assert.ok(
+    scopesOf(tokens, line, needle).includes(scope),
+    `"${needle}" should have ${scope}, has ${scopesOf(tokens, line, needle).join(' ')}`,
+  );
 const hasNot = (line: number, needle: string, scope: string) =>
   assert.ok(!scopesOf(tokens, line, needle).includes(scope), `"${needle}" should not have ${scope}`);
 
@@ -94,7 +97,9 @@ test('code fence options', () => {
   has(ranges, '[title.ts]', 'string.other.code-title.slide-ng');
   has(ranges, '2', 'constant.numeric.line-range.slide-ng');
   has(ranges, 'all', 'constant.language.line-range.slide-ng');
-  assert.ok(tokens[ranges].some((t) => t.text === '|' && t.scopes.includes('punctuation.separator.click-step.slide-ng')));
+  assert.ok(
+    tokens[ranges].some((t) => t.text === '|' && t.scopes.includes('punctuation.separator.click-step.slide-ng')),
+  );
   has(ranges, 'lines', 'meta.embedded.block.code-options.slide-ng'); // {lines:true, ...} is read as an object
   has(lineOf('magic-move'), 'magic-move', 'keyword.other.code-flag.slide-ng');
 });

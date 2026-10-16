@@ -34,7 +34,10 @@ const rule = (language, embed) => ({
   beginCaptures: {
     3: { name: 'punctuation.definition.markdown' },
     4: { name: 'fenced_code.block.language.markdown' },
-    5: { name: 'fenced_code.block.language.attributes.markdown', patterns: [{ include: 'text.html.markdown.slide-ng#code-options' }] },
+    5: {
+      name: 'fenced_code.block.language.attributes.markdown',
+      patterns: [{ include: 'text.html.markdown.slide-ng#code-options' }],
+    },
   },
   end: '(^|\\G)(\\2|\\s{0,3})(\\3)\\s*$',
   endCaptures: { 3: { name: 'punctuation.definition.markdown' } },

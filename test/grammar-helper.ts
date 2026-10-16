@@ -65,6 +65,7 @@ function merged(line: Token[]): Token[] {
 export function scopesOf(tokens: Token[][], line: number, needle: string): string[] {
   const pieces = merged(tokens[line]);
   const hit = pieces.find((t) => t.text === needle) ?? pieces.find((t) => t.text.includes(needle));
-  if (!hit) throw new Error(`no token with "${needle}" on line ${line + 1}: ${JSON.stringify(pieces.map((t) => t.text))}`);
+  if (!hit)
+    throw new Error(`no token with "${needle}" on line ${line + 1}: ${JSON.stringify(pieces.map((t) => t.text))}`);
   return hit.scopes;
 }
