@@ -4,6 +4,10 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+### Changed
+
+- The click estimate follows slide.ng's `<slide-ng-clicks>` rule: each item of a single list, each body row of a single table, otherwise each block, and a fractional `every` (`every="0.5"` gives each item two clicks).
+
 ## [0.1.0] - unreleased
 
 The first version. Nothing is published yet.

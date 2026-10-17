@@ -32,6 +32,15 @@ test('clicks: <slide-ng-clicks> lists', () => {
   assert.equal(estimateClicks(list.replace('<slide-ng-clicks>', '<slide-ng-clicks every="2">')).count, 2);
 });
 
+test('clicks: <slide-ng-clicks> tables and other children', () => {
+  const table = '<slide-ng-clicks>\n\n| a | b |\n| - | - |\n| 1 | 2 |\n| 3 | 4 |\n\n</slide-ng-clicks>';
+  assert.equal(estimateClicks(table).count, 2);
+  const blocks = '<slide-ng-clicks>\n\nOne paragraph.\n\n![a picture](/a.png)\n\n- a\n- b\n\n</slide-ng-clicks>';
+  assert.equal(estimateClicks(blocks).count, 3);
+  const list = '<slide-ng-clicks every="0.5">\n\n- a\n- b\n- c\n\n</slide-ng-clicks>';
+  assert.equal(estimateClicks(list).count, 6);
+});
+
 test('clicks: code ranges count, code text does not', () => {
   assert.equal(estimateClicks('```ts {1|3-4|all}\nconst a = 1;\n```').count, 2);
   assert.equal(estimateClicks('```html\n<div slide-ng-click>not markup</div>\n```').count, 0);
