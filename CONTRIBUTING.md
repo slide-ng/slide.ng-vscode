@@ -1,4 +1,4 @@
-# Contributing to slide.ng vscode
+# Contributing to the slide.ng VS Code extension
 
 Thanks for helping. This is a small extension and should stay readable.
 
@@ -9,8 +9,8 @@ By taking part you agree to the [Code of Conduct](CODE_OF_CONDUCT.md). Report se
 You need Node.js 22.23.3 or newer (`.nvmrc` names the version CI uses) and VS Code to try the extension.
 
 ```sh
-git clone https://github.com/slide-ng/vscode.git
-cd vscode
+git clone https://github.com/slide-ng/vscode-extension.git
+cd vscode-extension
 npm ci
 npm run build       # dist/extension.js
 npm test
