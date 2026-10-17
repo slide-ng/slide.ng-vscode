@@ -35,6 +35,8 @@ test('clicks: <slide-ng-clicks> lists', () => {
 test('clicks: <slide-ng-clicks> tables and other children', () => {
   const table = '<slide-ng-clicks>\n\n| a | b |\n| - | - |\n| 1 | 2 |\n| 3 | 4 |\n\n</slide-ng-clicks>';
   assert.equal(estimateClicks(table).count, 2);
+  const bare = '<slide-ng-clicks>\n\na | b\n--- | ---\n1 | 2\n| | |\n\n</slide-ng-clicks>';
+  assert.equal(estimateClicks(bare).count, 2);
   const blocks = '<slide-ng-clicks>\n\nOne paragraph.\n\n![a picture](/a.png)\n\n- a\n- b\n\n</slide-ng-clicks>';
   assert.equal(estimateClicks(blocks).count, 3);
   const list = '<slide-ng-clicks every="0.5">\n\n- a\n- b\n- c\n\n</slide-ng-clicks>';
