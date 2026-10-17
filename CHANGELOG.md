@@ -6,6 +6,7 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ### Changed
 
+- The repository is now `slide-ng/vscode` (it was `slide-ng/slide.ng-vscode`); links point to the new name.
 - The click estimate follows slide.ng's `<slide-ng-clicks>` rule: each item of a single list, each body row of a single table, otherwise each block, and a fractional `every` (`every="0.5"` gives each item two clicks).
 
 ## [0.1.0] - unreleased
@@ -21,5 +22,5 @@ The first version. Nothing is published yet.
 - Settings for the entry file, CLI command, port, preview behaviour and export.
 - Repository files for open source hosting: contribution guide, code of conduct, security policy, issue and pull request templates, a commit message check, git hooks and a CI workflow.
 
-[Unreleased]: https://github.com/slide-ng/slide.ng-vscode/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/slide-ng/slide.ng-vscode/commits/main
+[Unreleased]: https://github.com/slide-ng/vscode/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/slide-ng/vscode/commits/main

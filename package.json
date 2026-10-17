@@ -13,11 +13,11 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/slide-ng/slide.ng-vscode"
+    "url": "https://github.com/slide-ng/vscode"
   },
-  "homepage": "https://github.com/slide-ng/slide.ng-vscode#readme",
+  "homepage": "https://github.com/slide-ng/vscode#readme",
   "bugs": {
-    "url": "https://github.com/slide-ng/slide.ng-vscode/issues"
+    "url": "https://github.com/slide-ng/vscode/issues"
   },
   "categories": [
     "Programming Languages",
