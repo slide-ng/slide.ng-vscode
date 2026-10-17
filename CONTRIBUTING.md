@@ -31,7 +31,7 @@ To try it in an editor: open this folder in VS Code and press F5 ("Run the exten
 | `npm test`          | unit tests, grammar tests, commit message tests, a start-up test against a fake |
 | `npm run typecheck` | TypeScript, no output                                                           |
 | `npm run format`    | Prettier, writes changes (`npm run format:check` only checks)                   |
-| `npm run package`   | builds a minified bundle and `slide.ng-vscode.vsix` (nothing is published)      |
+| `npm run package`   | builds a minified bundle and `vscode-extension.vsix` (nothing is published)     |
 
 Before a pull request, run the format check, the type check, `npm test` and `npm run package`. CI runs the same. The tests do not start a real VS Code, so say in the pull request if you tried the change in one.
 

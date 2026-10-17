@@ -26,7 +26,7 @@ There is no marketplace release yet. Build a `.vsix` and install it:
 ```sh
 npm ci
 npm run package
-code --install-extension slide.ng-vscode.vsix
+code --install-extension vscode-extension.vsix
 ```
 
 Other scripts: `npm run build`, `npm test`, `npm run typecheck`, `npm run format:check`. All commands are in the command palette under `Slide:`; settings are under `slide-ng.*` (entry file, CLI command, dev port, preview, outline, export). Both are listed in `package.json`.
