@@ -13,6 +13,8 @@ export interface ClickCount {
 const FENCE = /^([ \t]*)(`{3,}|~{3,})([^\n]*)\n[\s\S]*?\n\1\2[`~]*[ \t]*(?:\n|$)/gm;
 const TAG = /<([a-zA-Z][\w-]*)((?:\s+[^\s=>"'/]+(?:\s*=\s*(?:"[^"]*"|'[^']*'))?)*)\s*\/?>/g;
 const ATTR = /([^\s=>"']+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'))?/g;
+// The second line of a GFM table, such as `| --- | :-: |` or `--- | ---`.
+const TABLE_DELIMITER = /^\s*\|?\s*:?-+:?\s*(?:\|\s*:?-+:?\s*)+\|?\s*$|^\s*\|\s*:?-+:?\s*\|\s*$/;
 const LIST_ITEM = /^(\s*)(?:[-*+]|\d+[.)])\s+\S/;
 
 export function estimateClicks(content: string, frontmatter: Record<string, unknown> = {}): ClickCount {
@@ -81,9 +83,9 @@ function clicksInTags(text: string, step: (n: number) => void, jump: (to: number
 function childCount(body: string, depth: number): number {
   const lines = body.split('\n').filter((line) => line.trim() !== '');
   if (!lines.length) return 0;
-  if (lines.every((line) => /^\s*\|/.test(line))) {
-    // A table: the header and the |---| line are not body rows.
-    return lines.filter((line) => !/^\s*\|[\s:|-]*$/.test(line)).length - 1;
+  if (lines.length >= 2 && TABLE_DELIMITER.test(lines[1]) && lines.every((line) => line.includes('|'))) {
+    // A table, with or without the outer pipes: the header and the delimiter row are not body rows.
+    return lines.length - 2;
   }
   if (LIST_ITEM.test(lines[0]) && lines.every((line) => LIST_ITEM.test(line) || /^\s+\S/.test(line))) {
     return lines.filter((line) => {
