@@ -1,7 +1,7 @@
 // An estimate of how many clicks a slide takes, from its text alone. The core works this out in the browser while the
 // slide runs (every `slide-ng-click` registers itself), so this can differ for computed values; the outline marks it as an estimate.
 //
-// Counted: `slide-ng-click` (bare, "3", "+2" and the `[slide-ng-click]="[2, 4]"` range), `<slide-ng-clicks>` lists, `<slide-ng-click-gap size>`, and
+// Counted: `slide-ng-click` (bare, "3", "+2" and the `[slide-ng-click]="[2, 4]"` range), `<slide-ng-clicks>` (list items, table rows or other blocks), `<slide-ng-click-gap size>`, and
 // every `|` in a code fence's `{1|3|all}` range. `slide-ng-after` adds nothing. A `clicks:` number in the frontmatter wins.
 
 export interface ClickCount {
@@ -13,6 +13,8 @@ export interface ClickCount {
 const FENCE = /^([ \t]*)(`{3,}|~{3,})([^\n]*)\n[\s\S]*?\n\1\2[`~]*[ \t]*(?:\n|$)/gm;
 const TAG = /<([a-zA-Z][\w-]*)((?:\s+[^\s=>"'/]+(?:\s*=\s*(?:"[^"]*"|'[^']*'))?)*)\s*\/?>/g;
 const ATTR = /([^\s=>"']+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'))?/g;
+// The second line of a GFM table, such as `| --- | :-: |` or `--- | ---`.
+const TABLE_DELIMITER = /^\s*\|?\s*:?-+:?\s*(?:\|\s*:?-+:?\s*)+\|?\s*$|^\s*\|\s*:?-+:?\s*\|\s*$/;
 const LIST_ITEM = /^(\s*)(?:[-*+]|\d+[.)])\s+\S/;
 
 export function estimateClicks(content: string, frontmatter: Record<string, unknown> = {}): ClickCount {
@@ -43,17 +45,14 @@ export function estimateClicks(content: string, frontmatter: Record<string, unkn
 }
 
 function clicksInTags(text: string, step: (n: number) => void, jump: (to: number) => void): void {
-  // <slide-ng-clicks> ... </slide-ng-clicks>: one click per list item (or per `every` items).
+  // <slide-ng-clicks> ... </slide-ng-clicks>: as in the core, a single list gives each item a click (to `depth`), a single
+  // table each body row, and anything else each block; `every` items share a click (`every="0.5"` gives each two).
   const withoutLists = text.replace(
     /<slide-ng-clicks\b([^>]*)>([\s\S]*?)<\/slide-ng-clicks>/g,
     (_all, attrs: string, body: string) => {
-      const every = Math.max(1, Number(attr(attrs, 'every')) || 1);
+      const every = Number(attr(attrs, 'every')) > 0 ? Number(attr(attrs, 'every')) : 1;
       const depth = Math.max(1, Number(attr(attrs, 'depth')) || 1);
-      const items = body.split('\n').filter((line) => {
-        if (!LIST_ITEM.test(line)) return false;
-        const indent = LIST_ITEM.exec(line)![1].replace(/\t/g, '  ').length;
-        return indent < 2 * depth;
-      }).length;
+      const items = childCount(body, depth);
       step(Math.ceil(items / every));
       return '';
     },
@@ -78,6 +77,24 @@ function clicksInTags(text: string, step: (n: number) => void, jump: (to: number
       step(1);
     }
   }
+}
+
+/** What `<slide-ng-clicks>` gives a click to, counted from its markdown. */
+function childCount(body: string, depth: number): number {
+  const lines = body.split('\n').filter((line) => line.trim() !== '');
+  if (!lines.length) return 0;
+  if (lines.length >= 2 && TABLE_DELIMITER.test(lines[1]) && lines.every((line) => line.includes('|'))) {
+    // A table, with or without the outer pipes: the header and the delimiter row are not body rows.
+    return lines.length - 2;
+  }
+  if (LIST_ITEM.test(lines[0]) && lines.every((line) => LIST_ITEM.test(line) || /^\s+\S/.test(line))) {
+    return lines.filter((line) => {
+      const item = LIST_ITEM.exec(line);
+      return item !== null && item[1].replace(/\t/g, '  ').length < 2 * depth;
+    }).length;
+  }
+  // Anything else: one click per block (blocks are separated by empty lines).
+  return body.split(/\n\s*\n/).filter((block) => block.trim() !== '').length;
 }
 
 /** The attributes of a tag as name -> value ('' when there is none). */
