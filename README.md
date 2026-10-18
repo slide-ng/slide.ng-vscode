@@ -85,7 +85,7 @@ The slide.ng extension is free and open source. If it helps your work, please co
 
 ## License
 
-MIT, see [LICENSE](LICENSE). The ideas for the grammar and the outline came from looking at other editor extensions for presentation tools; no code was copied.
+MIT License © 2026 [Erkam Yaman](https://github.com/erkamyaman) ([LICENSE](LICENSE)). The ideas for the grammar and the outline came from looking at other editor extensions for presentation tools; no code was copied.
 
 ## Credits and disclaimer
 

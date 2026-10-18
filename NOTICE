@@ -1,5 +1,5 @@
 slide.ng extension
-Copyright (c) 2026 slide.ng contributors, MIT License (see LICENSE).
+Copyright (c) 2026-PRESENT Erkam Yaman, MIT License (see LICENSE).
 
 The extension bundles @slidev/parser, @slidev/parser's dependency @antfu/utils and yaml. The full
 licence texts of all bundled packages are in THIRD-PARTY-NOTICES.md, which is also shipped in the
