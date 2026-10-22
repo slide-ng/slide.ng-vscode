@@ -81,6 +81,13 @@ test('tags: bindings, events, refs, structural directives, click directives', ()
   const range = lineOf('[slide-ng-click]');
   has(range, '[slide-ng-click]', 'entity.other.attribute-name.binding.slide-ng');
   has(range, 'slide-ng-after', 'entity.other.attribute-name.directive.slide-ng');
+  // click animation presets (2.0): modifiers on the attribute, also in a binding
+  const preset = lineOf('slide-ng-click.fade.right');
+  has(preset, 'slide-ng-click.fade.right', 'entity.other.attribute-name.directive.slide-ng');
+  has(preset, '3', 'string.quoted.double.slide-ng');
+  const bound = lineOf('[slide-ng-click.up]');
+  has(bound, '[slide-ng-click.up]', 'entity.other.attribute-name.binding.slide-ng');
+  has(bound, '4', 'meta.embedded.expression.slide-ng');
 });
 
 test('slot markers', () => {
@@ -116,6 +123,22 @@ test('snippet imports', () => {
   has(l, '<<<', 'punctuation.definition.snippet.slide-ng');
   has(l, './snippets/example.ts#greet', 'string.unquoted.path.snippet.slide-ng');
   has(l, '1', 'constant.numeric.line-range.slide-ng');
+  has(l, 'ts', 'fenced_code.block.language.snippet.slide-ng');
+  // 2.0: the language after the path, then a title with spaces and an icon
+  const titled = lineOf('<<< ./snippets/greet.py');
+  has(titled, './snippets/greet.py', 'string.unquoted.path.snippet.slide-ng');
+  has(titled, 'python', 'fenced_code.block.language.snippet.slide-ng');
+  has(titled, '[greet.py', 'string.other.code-title.slide-ng');
+  has(titled, '~i-carbon:code~', 'constant.other.icon.slide-ng');
+  has(titled, '2', 'constant.numeric.line-range.slide-ng');
+  has(titled, 'lines', 'meta.embedded.block.code-options.slide-ng');
+});
+
+test('an icon in a code block title', () => {
+  const l = lineOf('[npm ~i-carbon:terminal~]');
+  has(l, 'npm', 'string.other.code-title.slide-ng');
+  has(l, '~i-carbon:terminal~', 'constant.other.icon.slide-ng');
+  has(l + 1, 'npm', 'meta.embedded.block.shellscript');
 });
 
 test('nothing slide.ng-specific inside code', () => {

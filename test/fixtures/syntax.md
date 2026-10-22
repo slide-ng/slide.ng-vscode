@@ -32,6 +32,10 @@ Few.
 
 <div [slide-ng-click]="[2, 4]" slide-ng-after>Range</div>
 
+<div slide-ng-click.fade.right="3">Preset</div>
+
+<div [slide-ng-click.up]="[2, 4]">Bound range with a preset</div>
+
 ::right::
 
 Right side
@@ -54,6 +58,12 @@ const x = 1;
 ````
 
 <<< ./snippets/example.ts#greet ts {1|2}
+
+<<< ./snippets/greet.py python [greet.py ~i-carbon:code~] {2}{lines:true}
+
+```sh [npm ~i-carbon:terminal~]
+npm i
+```
 
 Inline `{{ not.a.binding }}` and a fence:
 

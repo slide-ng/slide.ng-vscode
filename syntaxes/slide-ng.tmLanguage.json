@@ -45,11 +45,12 @@
       }
     },
     "snippet": {
-      "comment": "<<< ./file.ts#region ts {1|2} {lines:true}",
-      "begin": "^(<<<)[ \\t]*(\\S+)?",
+      "comment": "<<< ./file.ts#region ts [title ~i-carbon:code~] {1|2} {lines:true}: the word after the path is the language",
+      "begin": "^(<<<)[ \\t]*(\\S+)?(?:[ \\t]+([A-Za-z][\\w+#.-]*)(?=[ \\t]|$))?",
       "beginCaptures": {
         "1": { "name": "punctuation.definition.snippet.slide-ng" },
-        "2": { "name": "string.unquoted.path.snippet.slide-ng" }
+        "2": { "name": "string.unquoted.path.snippet.slide-ng" },
+        "3": { "name": "fenced_code.block.language.snippet.slide-ng" }
       },
       "end": "$",
       "name": "meta.snippet.slide-ng",
@@ -57,7 +58,13 @@
     },
     "code-options": {
       "patterns": [
-        { "match": "\\[[^\\]\\n]*\\]", "name": "string.other.code-title.slide-ng" },
+        {
+          "comment": "[title.ts], with an icon written ~i-set:name~ (slide.ng 2.0)",
+          "begin": "\\[(?=[^\\]\\n]*\\])",
+          "end": "\\]",
+          "name": "string.other.code-title.slide-ng",
+          "patterns": [{ "match": "~i-[\\w-]+:[\\w-]+~", "name": "constant.other.icon.slide-ng" }]
+        },
         {
           "match": "(\\{)\\s*(monaco(?:-diff|-run|-write)?)\\s*(\\})",
           "name": "meta.code-options.slide-ng",
@@ -78,7 +85,7 @@
         },
         {
           "begin": "(?=\\{[^}\\n]*:)",
-          "end": "(?<=\\})",
+          "end": "(?<=\\})(?!\\G)",
           "name": "meta.code-options.slide-ng",
           "contentName": "meta.embedded.block.code-options.slide-ng",
           "patterns": [{ "include": "source.ts#object-literal" }]
