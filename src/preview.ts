@@ -1,7 +1,9 @@
-// The preview: a side panel that shows the running dev server (an iframe on http://localhost:<port>/<slide>).
+// The preview: a side panel that shows the running dev server (an iframe on http://localhost:<port>/<slide>, or the
+// address the deck's `routerMode` asks for, see preview-url.ts).
 // The page inside the iframe is the normal slide.ng app, so it does its own session and token handling.
 import { randomBytes } from 'node:crypto';
 import * as vscode from 'vscode';
+import type { Deck } from './deck.ts';
 import type { DevServer } from './server.ts';
 import { previewUrl } from './preview-url.ts';
 
@@ -11,6 +13,7 @@ export class Preview implements vscode.Disposable {
 
   constructor(
     private readonly server: DevServer,
+    private readonly deck: Deck,
     private readonly onStartRequested: () => void,
   ) {}
 
@@ -54,7 +57,9 @@ export class Preview implements vscode.Disposable {
       });
     }
     // asExternalUri maps localhost to the forwarded address when the window is remote.
-    const url = (await vscode.env.asExternalUri(vscode.Uri.parse(previewUrl(this.server.port, slide)))).toString(true);
+    const url = (
+      await vscode.env.asExternalUri(vscode.Uri.parse(previewUrl(this.server.port, slide, this.deck.routerMode)))
+    ).toString(true);
     if (url === this.shown) return;
     this.shown = url;
     void this.panel.webview.postMessage({ kind: 'url', url });

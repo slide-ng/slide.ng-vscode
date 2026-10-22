@@ -8,7 +8,7 @@ import { resolveEntry } from '../src/entry.ts';
 import { buildOutline, describe } from '../src/outline.ts';
 import { parseSlides } from '../src/parser.ts';
 import { isSlideNg, probe } from '../src/probe.ts';
-import { previewUrl } from '../src/preview-url.ts';
+import { previewUrl, routerModeOf } from '../src/preview-url.ts';
 import { commandLine, exportOptions, pathArg, portOption } from '../src/shell.ts';
 import { statusText } from '../src/status-text.ts';
 
@@ -166,6 +166,21 @@ test('status text', () => {
   assert.equal(statusText({ state: 'busy', port: 4300 }), '$(warning) slide.ng port 4300 in use');
   assert.equal(previewUrl(4230, 7), 'http://localhost:4230/7');
   assert.equal(previewUrl(4230, 0), 'http://localhost:4230/1');
+});
+
+test('preview addresses follow routerMode', async () => {
+  assert.equal(previewUrl(4230, 3, 'history'), 'http://localhost:4230/3');
+  assert.equal(previewUrl(4230, 3, 'hash'), 'http://localhost:4230/#/3');
+  // memory reads #/<n> once at load, so each slide is its own address (the query) and the page loads again
+  assert.equal(previewUrl(4230, 3, 'memory'), 'http://localhost:4230/?slide=3#/3');
+  const mode = async (headmatter: string) =>
+    routerModeOf(
+      (await parseSlides(`---\n${headmatter}\n---\n\n# One\n\n---\n\n# Two\n`, '/d/slides.md'))[0].frontmatter,
+    );
+  assert.equal(await mode('routerMode: memory'), 'memory');
+  assert.equal(await mode('routerMode: hash'), 'hash');
+  assert.equal(await mode('title: x'), 'history');
+  assert.equal(await mode('routerMode: other'), 'history');
 });
 
 test('probe: what counts as a slide.ng server', async () => {

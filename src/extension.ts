@@ -11,7 +11,7 @@ import { SlidesTree } from './tree.ts';
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   const deck = new Deck();
   const server = new DevServer(deck);
-  const preview = new Preview(server, () => void vscode.commands.executeCommand('slide-ng.startServer'));
+  const preview = new Preview(server, deck, () => void vscode.commands.executeCommand('slide-ng.startServer'));
   context.subscriptions.push(deck, server, preview, new SlidesTree(deck), new StatusBar(deck, server));
   registerCommands(context, deck, server, preview);
 

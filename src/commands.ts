@@ -55,7 +55,7 @@ export function registerCommands(
   });
   register('openInBrowser', async () => {
     if (server.state !== 'running') await server.start();
-    await vscode.env.openExternal(vscode.Uri.parse(previewUrl(server.port, deck.current)));
+    await vscode.env.openExternal(vscode.Uri.parse(previewUrl(server.port, deck.current, deck.routerMode)));
   });
   register('statusAction', async () => {
     if (server.state === 'stopped') await start();
