@@ -9,7 +9,7 @@ import { parseSlides, type SlideSource } from './parser.ts';
 import type { Preview } from './preview.ts';
 import { previewUrl } from './preview-url.ts';
 import type { DevServer } from './server.ts';
-import { commandLine, exportOptions } from './shell.ts';
+import { commandLine, exportOptions, langOption } from './shell.ts';
 
 export function registerCommands(
   context: vscode.ExtensionContext,
@@ -145,12 +145,10 @@ export function registerCommands(
     );
     if (!format) return;
     const entry = vscode.workspace.asRelativePath(deck.entry!, false);
-    const line = commandLine(
-      settings.cliCommand(),
-      'export',
-      entry,
-      exportOptions(format.label, settings.exportWithClicks()),
-    );
+    const line = commandLine(settings.cliCommand(), 'export', entry, [
+      ...exportOptions(format.label, settings.exportWithClicks()),
+      ...langOption(settings.lang()),
+    ]);
     const terminal = vscode.window.createTerminal({ name: 'slide.ng export', cwd: deck.folder!.uri.fsPath });
     terminal.show();
     terminal.sendText(line);

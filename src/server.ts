@@ -7,7 +7,7 @@ import * as vscode from 'vscode';
 import { settings } from './config.ts';
 import type { Deck } from './deck.ts';
 import { probe } from './probe.ts';
-import { commandLine, portOption } from './shell.ts';
+import { commandLine, langOption, portOption } from './shell.ts';
 import type { ServerState } from './status-text.ts';
 
 const TERMINAL = 'slide.ng dev server';
@@ -46,7 +46,10 @@ export class DevServer implements vscode.Disposable {
     if (found === 'slide-ng') return void (await this.refresh());
     if (found === 'other') throw new Error(`Port ${this.port} is used by something else. Change slide-ng.dev.port.`);
     const entry = vscode.workspace.asRelativePath(this.deck.entry, false);
-    const line = commandLine(settings.cliCommand(), 'dev', entry, portOption(this.port));
+    const line = commandLine(settings.cliCommand(), 'dev', entry, [
+      ...portOption(this.port),
+      ...langOption(settings.lang()),
+    ]);
     this.terminal?.dispose();
     this.terminal = vscode.window.createTerminal({ name: TERMINAL, cwd: this.deck.folder.uri.fsPath });
     this.terminal.show(true); // keep the focus in the editor

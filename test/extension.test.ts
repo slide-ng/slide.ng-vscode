@@ -115,6 +115,18 @@ test('export uses the format and the clicks setting', async () => {
   assert.equal(terminal.sent[0], 'npx --no-install slide-ng export "slides.md" --format pdf --with-clicks');
 });
 
+test('the lang setting is passed as --lang to export', async () => {
+  state.config['lang'] = 'pt-BR';
+  await run('export');
+  assert.match(state.terminals.at(-1)!.sent[0], / --lang pt-BR$/);
+  state.config['lang'] = 'en; rm -rf ~';
+  const terminals = state.terminals.length;
+  await run('export');
+  assert.equal(state.terminals.length, terminals);
+  assert.match(state.messages.error.at(-1)!, /not a language tag/);
+  delete state.config['lang'];
+});
+
 test('an untrusted workspace runs nothing', async () => {
   state.trusted = false;
   const terminals = state.terminals.length;

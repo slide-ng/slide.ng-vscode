@@ -46,7 +46,8 @@
       "description": "Starting the dev server and exporting run the project's own slide-ng command, so they are off until the workspace is trusted. Highlighting and the outline work without trust.",
       "restrictedConfigurations": [
         "slide-ng.cli.command",
-        "slide-ng.dev.port"
+        "slide-ng.dev.port",
+        "slide-ng.lang"
       ]
     }
   },
@@ -315,6 +316,13 @@
           "maximum": 65535,
           "scope": "window",
           "description": "Port of the dev server (passed as `--port`). The status bar and preview look for the server on this port."
+        },
+        "slide-ng.lang": {
+          "type": "string",
+          "default": "",
+          "pattern": "^([A-Za-z]{2,8}([-_][A-Za-z0-9]{1,8})*)?$",
+          "scope": "window",
+          "markdownDescription": "The language of the deck for the dev server and the Export command, such as `tr` or `pt-BR` (passed as `--lang`, slide.ng 2.0 or newer). It replaces the headmatter's `lang` for that run: the interface, the locale of dates and numbers, and `<html lang>`. Empty uses the headmatter."
         },
         "slide-ng.preview.followCursor": {
           "type": "boolean",

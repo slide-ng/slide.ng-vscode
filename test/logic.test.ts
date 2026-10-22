@@ -9,7 +9,7 @@ import { buildOutline, describe } from '../src/outline.ts';
 import { parseSlides } from '../src/parser.ts';
 import { isSlideNg, probe } from '../src/probe.ts';
 import { previewUrl, routerModeOf } from '../src/preview-url.ts';
-import { commandLine, exportOptions, pathArg, portOption } from '../src/shell.ts';
+import { commandLine, exportOptions, langOption, pathArg, portOption } from '../src/shell.ts';
 import { statusText } from '../src/status-text.ts';
 
 const deck = readFileSync(new URL('./fixtures/deck.md', import.meta.url), 'utf8');
@@ -138,6 +138,12 @@ test('command lines: quoting and refusal', () => {
   assert.deepEqual(exportOptions('pdf', true), ['--format', 'pdf', '--with-clicks']);
   assert.deepEqual(exportOptions('png', false), ['--format', 'png']);
   assert.throws(() => exportOptions('exe; calc', false));
+  assert.deepEqual(langOption(''), []);
+  assert.deepEqual(langOption(' tr '), ['--lang', 'tr']);
+  assert.deepEqual(langOption('pt-BR'), ['--lang', 'pt-BR']);
+  assert.deepEqual(langOption('pt_br'), ['--lang', 'pt_br']);
+  for (const bad of ['en;calc', 'en us', '$(x)', 'e', '"tr"'])
+    assert.throws(() => langOption(bad), /language tag/, bad);
   assert.throws(() => portOption(70000));
   assert.throws(() => portOption(1.5));
 });
