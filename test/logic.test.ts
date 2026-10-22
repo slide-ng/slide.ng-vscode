@@ -25,6 +25,36 @@ test('clicks: slide-ng-click forms', () => {
   assert.equal(estimateClicks('# No clicks\n\ntext').count, 0);
 });
 
+test('clicks: hide, ranges as text and presets (2.0)', () => {
+  const clicks = (text: string) => estimateClicks(text).count;
+  // `slide-ng-click-hide="3"` hides at click 3; with a show click, the hide click is the last one
+  assert.equal(clicks('<div slide-ng-click-hide="3">a</div>'), 3);
+  assert.equal(clicks('<div slide-ng-click-hide>a</div>'), 1);
+  assert.equal(clicks('<div slide-ng-click="2" slide-ng-click-hide="3">a</div>'), 3);
+  assert.equal(clicks('<div slide-ng-click="+1" slide-ng-click-hide="+1">a</div>\n<div slide-ng-click>b</div>'), 3);
+  // `.hide` is the hide flag, so the click counts
+  assert.equal(clicks('<div slide-ng-click.hide>a</div>'), 1);
+  assert.equal(clicks('<div slide-ng-click.hide="2">a</div>'), 2);
+  assert.equal(clicks('<div slide-ng-click>a</div>\n<div slide-ng-after.hide>b</div>'), 1);
+  // a range written as text, with presets, and bound with presets
+  assert.equal(clicks('<div slide-ng-click="[2, 4]">a</div>'), 4);
+  assert.equal(clicks('<div slide-ng-click.up="[2, 4]">a</div>'), 4);
+  assert.equal(clicks('<div [slide-ng-click.up]="[2, 4]">a</div>'), 4);
+  // presets do not change the count
+  assert.equal(clicks('<div slide-ng-click.fade.right>a</div>\n<div slide-ng-click.scale="+2">b</div>'), 3);
+  assert.equal(clicks('<div slide-ng-click.fade.right="3">a</div>'), 3);
+  // an absolute click does not move the counter that bare and +n clicks count from
+  assert.equal(clicks('<div slide-ng-click="3">a</div>\n<div slide-ng-click>b</div>'), 3);
+  assert.equal(
+    clicks('<div slide-ng-click="2">a</div>\n<div slide-ng-click="+2">b</div>\n<div slide-ng-click>c</div>'),
+    3,
+  );
+  // values that never show
+  assert.equal(clicks('<div slide-ng-click="abc">a</div>'), 0);
+  assert.equal(clicks('<div slide-ng-click="false">a</div>'), 0);
+  assert.equal(clicks('<div [slide-ng-click]="computed()">a</div>'), 0);
+});
+
 test('clicks: <slide-ng-clicks> lists', () => {
   const list = '<slide-ng-clicks>\n\n- a\n- b\n  - nested\n- c\n\n</slide-ng-clicks>';
   assert.equal(estimateClicks(list).count, 3);
