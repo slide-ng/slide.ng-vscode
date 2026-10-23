@@ -7,6 +7,7 @@ import { slideAtLine } from './edit.ts';
 import { resolveEntry } from './entry.ts';
 import { buildOutline, type OutlineItem } from './outline.ts';
 import { parseSlides, type SlideSource } from './parser.ts';
+import { routerModeOf, type RouterMode } from './preview-url.ts';
 
 export class Deck implements vscode.Disposable {
   /** The deck file, when the workspace has one. */
@@ -48,6 +49,11 @@ export class Deck implements vscode.Disposable {
 
   get isDeck(): boolean {
     return this.entry !== undefined;
+  }
+
+  /** The headmatter's `routerMode`: how the dev server puts the slide in the address. */
+  get routerMode(): RouterMode {
+    return routerModeOf(this.slides[0]?.frontmatter);
   }
 
   private isEntry(uri: vscode.Uri) {

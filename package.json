@@ -2,7 +2,7 @@
   "name": "slide-ng-vscode",
   "displayName": "slide.ng",
   "description": "Syntax, outline, dev server and preview for slide.ng decks (slides.md)",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "slide-ng",
   "icon": "res/icon.png",
   "galleryBanner": {
@@ -46,7 +46,8 @@
       "description": "Starting the dev server and exporting run the project's own slide-ng command, so they are off until the workspace is trusted. Highlighting and the outline work without trust.",
       "restrictedConfigurations": [
         "slide-ng.cli.command",
-        "slide-ng.dev.port"
+        "slide-ng.dev.port",
+        "slide-ng.lang"
       ]
     }
   },
@@ -306,7 +307,7 @@
           "type": "string",
           "default": "npx --no-install slide-ng",
           "scope": "machine",
-          "markdownDescription": "The command that runs the project's own `slide-ng`, run in the deck folder. The extension adds `dev` or `export`, the deck path and flags. Use `npx --no-install slide-ng` for npm, pnpm and yarn projects, or `node node_modules/slide-ng/bin/slide-ng.mjs`. Only a user setting: a workspace cannot change it."
+          "markdownDescription": "The command that runs the project's own `slide-ng`, run in the deck folder. The extension adds `dev` or `export`, the deck path and flags. Use `npx --no-install slide-ng` for npm, pnpm and yarn projects, or `node node_modules/@slide-ng/core/bin/slide-ng.mjs`. Only a user setting: a workspace cannot change it."
         },
         "slide-ng.dev.port": {
           "type": "number",
@@ -315,6 +316,13 @@
           "maximum": 65535,
           "scope": "window",
           "description": "Port of the dev server (passed as `--port`). The status bar and preview look for the server on this port."
+        },
+        "slide-ng.lang": {
+          "type": "string",
+          "default": "",
+          "pattern": "^([A-Za-z]{2,8}([-_][A-Za-z0-9]{1,8})*)?$",
+          "scope": "window",
+          "markdownDescription": "The language of the deck for the dev server and the Export command, such as `tr` or `pt-BR` (passed as `--lang`, slide.ng 2.0 or newer). It replaces the headmatter's `lang` for that run: the interface, the locale of dates and numbers, and `<html lang>`. Empty uses the headmatter."
         },
         "slide-ng.preview.followCursor": {
           "type": "boolean",

@@ -30,3 +30,12 @@ export function portOption(port: number): string[] {
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error(`"${port}" is not a port number.`);
   return ['--port', String(port)];
 }
+
+/** `--lang <tag>` (slide.ng 2.0) for a language tag such as `tr`, `pt-BR` or `pt_br`; nothing when it is empty. */
+export function langOption(lang: string): string[] {
+  const tag = lang.trim();
+  if (!tag) return [];
+  if (!/^[A-Za-z]{2,8}(?:[-_][A-Za-z0-9]{1,8})*$/.test(tag))
+    throw new Error(`"${lang}" is not a language tag (such as tr or pt-BR).`);
+  return ['--lang', tag];
+}
