@@ -62,6 +62,9 @@
         "filenames": [
           "slides.md"
         ],
+        "filenamePatterns": [
+          "slides.*.md"
+        ],
         "configuration": "./language-configuration.json"
       }
     ],
