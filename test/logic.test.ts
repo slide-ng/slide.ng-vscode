@@ -4,7 +4,7 @@ import { createServer } from 'node:http';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { estimateClicks } from '../src/clicks.ts';
-import { resolveEntry } from '../src/entry.ts';
+import { resolveEntry, translationFiles } from '../src/entry.ts';
 import { buildOutline, describe } from '../src/outline.ts';
 import { parseSlides } from '../src/parser.ts';
 import { isSlideNg, probe } from '../src/probe.ts';
@@ -160,6 +160,20 @@ test('entry: default, setting, confinement', () => {
   assert.match(resolveEntry('/w', '../x.md', have('/x.md')).problem!, /outside/);
   assert.match(resolveEntry('/w', '/etc/x.md', have('/etc/x.md')).problem!, /outside/);
   assert.match(resolveEntry('/w', 'a.txt', have('/w/a.txt')).problem!, /not a \.md/);
+});
+
+test('translations: the other files of languages (2.1)', async () => {
+  const head = async (text: string) => (await parseSlides(`---\n${text}\n---\n\n# A\n`, '/w/slides.md'))[0].frontmatter;
+  assert.deepEqual(translationFiles(await head('languages:\n  en: slides.md\n  tr: slides.tr.md'), '/w/slides.md'), [
+    '/w/slides.tr.md',
+  ]);
+  assert.deepEqual(
+    translationFiles(await head('languages: { en: ./slides.md, de: de/slides.md, fr: notes.txt }'), '/w/slides.md'),
+    ['/w/de/slides.md'],
+  );
+  assert.deepEqual(translationFiles(await head('title: x'), '/w/slides.md'), []);
+  assert.deepEqual(translationFiles(await head('languages: [slides.tr.md]'), '/w/slides.md'), []);
+  assert.deepEqual(translationFiles(undefined, '/w/slides.md'), []);
 });
 
 test('status text', () => {

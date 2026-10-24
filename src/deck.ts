@@ -4,7 +4,7 @@ import { existsSync } from 'node:fs';
 import * as vscode from 'vscode';
 import { settings } from './config.ts';
 import { slideAtLine } from './edit.ts';
-import { resolveEntry } from './entry.ts';
+import { resolveEntry, translationFiles } from './entry.ts';
 import { buildOutline, type OutlineItem } from './outline.ts';
 import { parseSlides, type SlideSource } from './parser.ts';
 import { routerModeOf, type RouterMode } from './preview-url.ts';
@@ -20,6 +20,9 @@ export class Deck implements vscode.Disposable {
   /** Set when the file could not be read as slides. */
   error?: string;
   current = 1;
+  /** The translation files the headmatter's `languages` lists (slide.ng 2.1). Their slides are paired with ours by number. */
+  translations: vscode.Uri[] = [];
+  private translated?: { uri: string; version: number; slides: SlideSource[] };
 
   private readonly changed = new vscode.EventEmitter<void>();
   readonly onDidChange = this.changed.event;
@@ -42,7 +45,9 @@ export class Deck implements vscode.Disposable {
       vscode.workspace.onDidChangeConfiguration((e) => e.affectsConfiguration('slide-ng') && void this.detect()),
       vscode.window.onDidChangeActiveTextEditor(() => this.updateCurrent()),
       vscode.window.onDidChangeTextEditorSelection(
-        (e) => this.isEntry(e.textEditor.document.uri) && this.updateCurrent(),
+        (e) =>
+          (this.isEntry(e.textEditor.document.uri) || this.isTranslation(e.textEditor.document.uri)) &&
+          this.updateCurrent(),
       ),
     );
   }
@@ -58,6 +63,10 @@ export class Deck implements vscode.Disposable {
 
   private isEntry(uri: vscode.Uri) {
     return this.entry !== undefined && uri.toString() === this.entry.toString();
+  }
+
+  private isTranslation(uri: vscode.Uri) {
+    return this.translations.some((t) => t.toString() === uri.toString());
   }
 
   /** Finds the deck file again (workspace or settings changed) and reads it. */
@@ -96,12 +105,16 @@ export class Deck implements vscode.Disposable {
     if (!this.entry) {
       this.slides = [];
       this.items = [];
+      this.translations = [];
       this.error = undefined;
     } else {
       try {
         const doc = await vscode.workspace.openTextDocument(this.entry);
         this.slides = await parseSlides(doc.getText(), doc.fileName);
         this.items = buildOutline(this.slides);
+        this.translations = translationFiles(this.slides[0]?.frontmatter, this.entry.fsPath).map((p) =>
+          vscode.Uri.file(p),
+        );
         this.error = undefined;
       } catch (e) {
         // Keep the last good outline; say what went wrong.
@@ -112,11 +125,38 @@ export class Deck implements vscode.Disposable {
     this.updateCurrent();
   }
 
-  /** The slide under the cursor, when the deck file is the active editor; otherwise the last one. */
+  /**
+   * The slide under the cursor, when the deck file or one of its translations is the active editor; otherwise the last
+   * one. A translation's slide n is the deck's slide n.
+   */
   private updateCurrent() {
     const editor = vscode.window.activeTextEditor;
-    if (!editor || !this.isEntry(editor.document.uri) || !this.slides.length) return;
-    const now = slideAtLine(this.slides, editor.selection.active.line);
+    if (!editor || !this.slides.length) return;
+    const doc = editor.document;
+    const line = editor.selection.active.line;
+    if (this.isEntry(doc.uri)) return this.setCurrent(slideAtLine(this.slides, line));
+    if (!this.isTranslation(doc.uri)) return;
+    void this.translationSlides(doc).then((slides) => {
+      if (slides.length && vscode.window.activeTextEditor?.document === doc)
+        this.setCurrent(Math.min(slideAtLine(slides, line), this.slides.length));
+    });
+  }
+
+  /** The slides of a translation file, read again when its text changed. A file that cannot be read has none. */
+  private async translationSlides(doc: vscode.TextDocument): Promise<SlideSource[]> {
+    const uri = doc.uri.toString();
+    if (this.translated?.uri === uri && this.translated.version === doc.version) return this.translated.slides;
+    let slides: SlideSource[] = [];
+    try {
+      slides = await parseSlides(doc.getText(), doc.fileName);
+    } catch {
+      // The CLI reports what is wrong with the file.
+    }
+    this.translated = { uri, version: doc.version, slides };
+    return slides;
+  }
+
+  private setCurrent(now: number) {
     if (now !== this.current) {
       this.current = now;
       this.currentChanged.fire(now);
