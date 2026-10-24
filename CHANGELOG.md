@@ -4,6 +4,19 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+## [0.3.0] - unreleased
+
+Support for slide.ng 2.1. Nothing is published yet.
+
+### Added
+
+- Translation files of a deck with `languages` in its headmatter (slide.ng 2.1): the cursor in a listed file, such as `slides.tr.md`, moves the preview, the outline and the status bar to the slide with the same number, as the deck pairs them by number.
+- Highlighting for files named `slides.*.md` (such as `slides.tr.md`), the name the slide.ng docs give translations.
+
+### Changed
+
+- The `slide-ng.lang` description says what `--lang` does with `languages`: it picks the language a page starts in and the one Export exports.
+
 ## [0.2.0] - unreleased
 
 Support for slide.ng 2.0. Nothing is published yet.
