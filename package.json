@@ -325,7 +325,7 @@
           "default": "",
           "pattern": "^([A-Za-z]{2,8}([-_][A-Za-z0-9]{1,8})*)?$",
           "scope": "window",
-          "markdownDescription": "The language of the deck for the dev server and the Export command, such as `tr` or `pt-BR` (passed as `--lang`, slide.ng 2.0 or newer). It replaces the headmatter's `lang` for that run: the interface, the locale of dates and numbers, and `<html lang>`. Empty uses the headmatter."
+          "markdownDescription": "The language of the deck for the dev server and the Export command, such as `tr` or `pt-BR` (passed as `--lang`, slide.ng 2.0 or newer). For a deck with `languages` in its headmatter (slide.ng 2.1), it is the language a page starts in until one is chosen in the deck's language menu, and the one Export exports. Otherwise it replaces the headmatter's `lang` for that run: the interface, the locale of dates and numbers, and `<html lang>`. Empty uses the headmatter."
         },
         "slide-ng.preview.followCursor": {
           "type": "boolean",
