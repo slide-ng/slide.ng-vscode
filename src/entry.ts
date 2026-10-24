@@ -1,5 +1,5 @@
 // Which markdown file is the deck. No VS Code API here: `exists` is passed in, so the rules can be tested.
-import { isAbsolute, join, relative, resolve } from 'node:path';
+import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
 
 export const DEFAULT_ENTRY = 'slides.md';
 
@@ -30,4 +30,21 @@ export function resolveEntry(
     return { problem: `slide-ng.entry "${wanted}" is outside the workspace folder.` };
   if (!path.toLowerCase().endsWith('.md')) return { problem: `slide-ng.entry "${wanted}" is not a .md file.` };
   return exists(path) ? { path } : { problem: `slide-ng.entry "${wanted}" does not exist.` };
+}
+
+/**
+ * The translation files of a deck with `languages: { en: slides.md, tr: slides.tr.md }` in its headmatter (slide.ng 2.1):
+ * absolute paths of the `.md` files other than the entry file, relative to its folder. Slides are paired with the entry
+ * file's by number. Anything else in `languages` is left to the CLI to report.
+ */
+export function translationFiles(headmatter: Record<string, unknown> | undefined, entry: string): string[] {
+  const languages = headmatter?.languages;
+  if (!languages || typeof languages !== 'object' || Array.isArray(languages)) return [];
+  const files = new Set<string>();
+  for (const name of Object.values(languages)) {
+    if (typeof name !== 'string' || !/\.md$/i.test(name.trim())) continue;
+    const path = resolve(dirname(entry), name.trim());
+    if (path !== resolve(entry)) files.add(path);
+  }
+  return [...files];
 }

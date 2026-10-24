@@ -11,12 +11,12 @@ Editor support for [slide.ng](https://github.com/slide-ng/slide.ng) decks: slide
 
 ## Features
 
-- **Syntax highlighting** for `slides.md` (language `slide-ng`): slide separators, per-slide frontmatter, code fence options, Angular control flow and bindings, `::slot::` lines and `[click]` markers in notes.
+- **Syntax highlighting** for `slides.md` and translations named like `slides.tr.md` (language `slide-ng`): slide separators, per-slide frontmatter, code fence options, Angular control flow and bindings, `::slot::` lines and `[click]` markers in notes.
 - **Slides outline** in the side bar: number, title, layout and estimated click count per slide. Click a slide to jump to it.
 - **Dev server** and **preview**: start and stop `slide-ng dev` in a terminal, and preview in a side panel that follows the cursor, or in your browser. The preview follows the deck's `routerMode` (`history`, `hash` or `memory`).
 - **Edit slides**: move up or down, new slide below, duplicate.
 - **Export** through `slide-ng export`, and a **status bar** item showing the current slide and server state.
-- **Language**: the `slide-ng.lang` setting runs the dev server and the export in another language (`--lang`, slide.ng 2.0), for one deck in several languages.
+- **Language**: the `slide-ng.lang` setting runs the dev server and the export in another language (`--lang`, slide.ng 2.0). For a deck with `languages` in its headmatter (slide.ng 2.1), it picks the language a page starts in and the one Export exports, and the preview also follows the cursor in a translation file: its slide 3 is the deck's slide 3.
 
 The extension activates when the workspace has a `slides.md`, or when `slide-ng.entry` points to a deck file. It has no copy of the CLI: it runs your project's own `slide-ng` (by default `npx --no-install slide-ng`), so install slide.ng in your project first.
 
@@ -37,6 +37,7 @@ Other scripts: `npm run build`, `npm test`, `npm run typecheck`, `npm run format
 - The `slide-ng` language mode replaces Markdown for the deck file, so Markdown-only features (such as the built-in Markdown preview) are not active in it.
 - The click count is an estimate from the slide text, and `src:` imports are not followed.
 - The preview reads `routerMode` from the deck's headmatter only; a theme or addon that sets it is not seen.
+- With `languages`, the outline and the slide edits work on the entry file only. The preview shows the language chosen in the deck's own language menu, not the file the cursor is in.
 - Preview in remote windows (SSH, containers, Codespaces) is not checked.
 
 For the full syntax and the CLI, see the documentation at [slide-ng.dev](https://slide-ng.dev).
